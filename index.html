@@ -1,0 +1,26 @@
+<!doctype html>
+<head>
+  <title>Connect 4</title>
+  <link href="connect4.css" rel="stylesheet">
+</head>
+<body>
+
+<div id="game">
+  <table id="board"></table>
+</div>
+<h4>Enter Board Dimensions to Begin Game</h4>
+<form>
+  <label for="width">Enter Width</label>
+  <input type="number" name="width" id="width" value="7" min="5" max="10">
+  <br>
+  <label for="height">Enter Height</label>
+  <input type="number" name="height" id="height" value="6" min="5" max="10">
+  <br>
+  <button id="dimensionButton">Submit Board Dimensions</button>
+  <button id="restart">Restart Game</button>
+</form>
+
+<script src="connect4.js"></script>
+
+</body>
+</html>
