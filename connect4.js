@@ -95,9 +95,6 @@ function placeInTable(y, x) {
   piece.classList.add('piece');
   piece.classList.add(`player${currPlayer}`)
   const placement = document.getElementById(`${y}-${x}`);
-  piece.style.top = -50 * (y + 2);
-
-  console.log(placement);
   placement.append(piece);
 }
 
@@ -112,7 +109,7 @@ function endGame(msg) {
 
 function handleClick(evt) {
   if(gameOver) {
-    htmlBoard.classList.add('freeze'); 
+    htmlBoard.classList.add('freeze');
     return;
   }
 
