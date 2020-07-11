@@ -49,3 +49,7 @@ table {
 input {
   margin: 5px;
 }
+
+.freeze {
+  pointer-events: none;
+}

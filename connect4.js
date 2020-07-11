@@ -9,6 +9,7 @@ const widthInput = document.getElementById('width');
 const dimensionBtn = document.getElementById('dimensionButton');
 const labels = document.querySelectorAll('label');
 const restartBtn = document.getElementById('restart');
+let gameOver = false;
 
 restartBtn.hidden = true;
 dimensionBtn.addEventListener('click', function(e) {
@@ -104,11 +105,17 @@ function placeInTable(y, x) {
 
 function endGame(msg) {
   alert(msg);
+  gameOver = true;
 }
 
 /** handleClick: handle click of column top to play piece */
 
 function handleClick(evt) {
+  if(gameOver) {
+    htmlBoard.classList.add('freeze'); 
+    return;
+  }
+
   // get x from ID of clicked cell
   var x = +evt.target.id;
 
