@@ -4,14 +4,19 @@
  * column until a player gets four-in-a-row (horiz, vert, or diag) or until
  * board fills (tie)
  */
+
+ //Variables (DOM El's and otherwise)
 const heightInput = document.getElementById('height');
 const widthInput = document.getElementById('width');
 const dimensionBtn = document.getElementById('dimensionButton');
 const labels = document.querySelectorAll('label');
 const restartBtn = document.getElementById('restart');
 let gameOver = false;
-
 restartBtn.hidden = true;
+var currPlayer = 1; // active player: 1 or 2
+var board = []; // array of rows, each row is array of cells  (board[y][x])
+
+//Board Dimension Event Listener
 dimensionBtn.addEventListener('click', function(e) {
   board = [];
   e.preventDefault();
@@ -22,17 +27,11 @@ dimensionBtn.addEventListener('click', function(e) {
     HEIGHT = heightInput.value;
     makeBoard();
     makeHtmlBoard();
-    document.querySelector('h4').remove();
-    heightInput.remove();
-    widthInput.remove();
-    dimensionBtn.remove();
+    [heightInput, widthInput, dimensionBtn, document.querySelector('h4')].forEach(el => el.remove());
     labels.forEach(l => l.remove());
     restartBtn.hidden = false;
   }
 })
-
-var currPlayer = 1; // active player: 1 or 2
-var board = []; // array of rows, each row is array of cells  (board[y][x])
 
 /** makeBoard: create in-JS board structure:
  *    board = array of rows, each row is array of cells  (board[y][x])
@@ -43,7 +42,6 @@ function makeBoard() {
   for(i = 0; i < HEIGHT; i++) {
     board.push(new Array(WIDTH).fill(null));
   }
-  console.log(board);
 }
 
 /** makeHtmlBoard: make HTML table and row of column tops. */
@@ -52,10 +50,14 @@ function makeHtmlBoard() {
   // TODO: get "htmlBoard" variable from the item in HTML w/ID of "board"
   const htmlBoard = document.getElementById('board');
   // TODO: add comment for this code
+  //Student Comment: Here, a table row element is created. A tr extends horizontally across a table. It is populuated with table data (td).
   var top = document.createElement("tr");
+  //Student Comment: Here, the above created element receives a new attribute, id with a value of column-top. Column-top corresponds with a pre-written CSS id selector that gives any element with this attribute a dashed, gray border
   top.setAttribute("id", "column-top");
+  //Student Comment: Here, the top element is given an Event Listener activated by user event, click.
   top.addEventListener("click", handleClick);
 
+  //Student Comment: Here, top is appended with the aforementioned table data. It recieves an attribute of id set equal to the index of the loop. So the third headCell will have an ID of 2. After the loop, the whole of the tr is appended to the board HTML element.
   for (var x = 0; x < WIDTH; x++) {
     var headCell = document.createElement("td");
     headCell.setAttribute("id", x);
@@ -64,8 +66,11 @@ function makeHtmlBoard() {
   htmlBoard.append(top);
 
   // TODO: add comment for this code
+  //Student Comment: First, a loop is initialized. It will run until index reaches value of height - 1 (which equals the actual height of the game board).
   for (var y = 0; y < HEIGHT; y++) {
+    //Student Comment: Each time the above loop runs, a table row element is created. Looking ahead, after the nested loop, we can see, each time a tr is created, it is appended to our htmlBoard.
     const row = document.createElement("tr");
+    //Student Comment: Here, we run a nested loop, this time stopping when index is equal to the width of the game board. Each time, this loop runs, a table data element is created and stored in variable "cell". This next part is really cool. Cell is given an ID of y (the index from the outside loop) and x (the index from the nested loop). So a cell in the 4th row, 6th column will have an id attribute of id="3-5". Then this cell is appended to the row element created in the outside loop.
     for (var x = 0; x < WIDTH; x++) {
       const cell = document.createElement("td");
       cell.setAttribute("id", `${y}-${x}`);
@@ -76,10 +81,11 @@ function makeHtmlBoard() {
 }
 
 /** findSpotForCol: given column x, return top empty y (null if filled) */
-
+//Student Comment: Given X column, always start at Y = 5 (bottom cell with value of null, falsy). Turn row 5 at x column from falsy to truthy. Next time, start at first falsy value.
 function findSpotForCol(x) {
   // TODO: write the real version of this, rather than always returning 0
   for(y = HEIGHT - 1; y >= 0; y--) {
+    //Student Comment: Conditional checks status of cell at Y=5, X=input. If cell has value of null, it returns this Y value.
     if(board[y][x] === null) {
       return y;
     }
@@ -91,6 +97,8 @@ function findSpotForCol(x) {
 
 function placeInTable(y, x) {
   // TODO: make a div and insert into correct table cell
+  //Student Comment: Create game piece by making a div. Adding class of piece to give it a shape. Adding class of player{1 or 2} for piece color. Place piece in proper spot on table by storing cell element with matching ID in variable placement. Appending the piece to this placement.
+
   const piece = document.createElement('div');
   piece.classList.add('piece');
   piece.classList.add(`player${currPlayer}`)
@@ -165,6 +173,11 @@ function checkForWin() {
   }
 
   // TODO: read and understand this code. Add comments to help you.
+  //Student Comment: First, a pair of loops are initialized (WIDTH nested within HEIGHT). These both start at zero index and iterate over the arrays. Within these loops, 4 variables are declared:
+  //  *horiz stores a horizontal victory. It does so by maintaining the y index across the array as the x index increases by one. In action, it would look like [[0, 0], [0, 1], [0, 2], [0, 3]];
+  //  *vert stores a vertical victory. It mirrors the logic of horiz but maintains x index as y is increased by 1. [[0, 0], [1, 0], [2, 0], [3, 0]];
+  //  *diaDR stores a diagonal, right-directed victory. Both values are increased by the same addened. [[0, 0], [1, 1], [2, 2], [3, 3]];
+  //  *diaDL stores a diagonal, left-directed victory. Phew, I woulda struggled coming up with this. As y index is increased by an addened, x is decreased by a mirrored subtrahend. [[3, 3], [4, 2], [5, 1], [6, 0]];
 
   for (var y = 0; y < HEIGHT; y++) {
     for (var x = 0; x < WIDTH; x++) {
