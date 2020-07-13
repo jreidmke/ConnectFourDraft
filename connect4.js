@@ -21,7 +21,7 @@ dimensionBtn.addEventListener('click', function(e) {
   board = [];
   e.preventDefault();
   if(widthInput.value > 10 || widthInput.value < 5 || heightInput.value > 10 || heightInput.value < 5) {
-    alert("PLEASE ENTER VALUE BETWEEN 5 AND 10");
+    document.querySelector("h4").innerHTML = "Please enter value between 5 and 10.";
   } else {
     WIDTH = parseInt(widthInput.value);
     HEIGHT = heightInput.value;
@@ -52,12 +52,12 @@ function makeHtmlBoard() {
   // TODO: add comment for this code
   //Student Comment: Here, a table row element is created. A tr extends horizontally across a table. It is populuated with table data (td).
   var top = document.createElement("tr");
-  //Student Comment: Here, the above created element receives a new attribute, id with a value of column-top. Column-top corresponds with a pre-written CSS id selector that gives any element with this attribute a dashed, gray border
+  //Student Comment: Here, the above created element receives a new attribute of "id" with a value of column-top. Column-top corresponds with a pre-written CSS id selector that gives any element with this attribute a dashed, gray border
   top.setAttribute("id", "column-top");
   //Student Comment: Here, the top element is given an Event Listener activated by user event, click.
   top.addEventListener("click", handleClick);
 
-  //Student Comment: Here, top is appended with the aforementioned table data. It recieves an attribute of id set equal to the index of the loop. So the third headCell will have an ID of 2. After the loop, the whole of the tr is appended to the board HTML element.
+  //Student Comment: Here, top is appended with the aforementioned table data. It recieves an attribute of id set equal to the index of the loop. So the third headCell will have an ID of 2. After the loop, the whole of the tr is appended to the board HTML element. At this point in the loop, there is only the one row. Below, the remaining cells of the gameboard are appended.
   for (var x = 0; x < WIDTH; x++) {
     var headCell = document.createElement("td");
     headCell.setAttribute("id", x);
@@ -66,11 +66,11 @@ function makeHtmlBoard() {
   htmlBoard.append(top);
 
   // TODO: add comment for this code
-  //Student Comment: First, a loop is initialized. It will run until index reaches value of height - 1 (which equals the actual height of the game board).
+  //Student Comment: First, a loop is initialized. It will run until index reaches value of height - 1 (which equals the actual height of the game board when factoring in 0 idx).
   for (var y = 0; y < HEIGHT; y++) {
     //Student Comment: Each time the above loop runs, a table row element is created. Looking ahead, after the nested loop, we can see, each time a tr is created, it is appended to our htmlBoard.
     const row = document.createElement("tr");
-    //Student Comment: Here, we run a nested loop, this time stopping when index is equal to the width of the game board. Each time, this loop runs, a table data element is created and stored in variable "cell". This next part is really cool. Cell is given an ID of y (the index from the outside loop) and x (the index from the nested loop). So a cell in the 4th row, 6th column will have an id attribute of id="3-5". Then this cell is appended to the row element created in the outside loop.
+    //Student Comment: Here, we run a nested loop, this time stopping when index is equal to the width of the game board. Each time, this loop runs, a table data element is created and stored in variable "cell". This next part is really cool. Cell is given an ID of y (the index from the outside loop) and x (the index from the nested loop). So a cell in the 4th row, 6th column will have an attribute of id="3-5". Then this cell is appended to the row element created in the outside loop.
     for (var x = 0; x < WIDTH; x++) {
       const cell = document.createElement("td");
       cell.setAttribute("id", `${y}-${x}`);
@@ -81,7 +81,7 @@ function makeHtmlBoard() {
 }
 
 /** findSpotForCol: given column x, return top empty y (null if filled) */
-//Student Comment: Given X column, always start at Y = 5 (bottom cell with value of null, falsy). Turn row 5 at x column from falsy to truthy. Next time, start at first falsy value.
+//Student Comment: Given X column, always start at Y = 5 (bottom cell with value of null, falsy). If value of cell is falsy, return the y idx, else return null.
 function findSpotForCol(x) {
   // TODO: write the real version of this, rather than always returning 0
   for(y = HEIGHT - 1; y >= 0; y--) {
@@ -107,7 +107,7 @@ function placeInTable(y, x) {
 }
 
 /** endGame: announce game end */
-
+//Student Comment: gameOver set to true to freeze interaction with gameboard.
 function endGame(msg) {
   alert(msg);
   gameOver = true;
@@ -132,6 +132,7 @@ function handleClick(evt) {
 
   // place piece in board and add to HTML table
   // TODO: add line to update in-memory board
+  //Student Comment: JS board is updated. Value at specified indexes is upated from null to currPlayer number (ex: null => 1).
   board[y][x] = currPlayer;
   placeInTable(y, x);
 
@@ -142,6 +143,7 @@ function handleClick(evt) {
 
   // check for tie
   // TODO: check if all cells in board are filled; if so call, call endGame
+  //Student Comment: Values of multidimensional board array are reduced to a single array with length of board dimensions. This array is then checked using every method. If no array element has the value of null, it means every cell on board is populated with either 1 or 2. This means tie game.
   if(board.reduce((a, b) => {
     a.push(...b);
     return a;
